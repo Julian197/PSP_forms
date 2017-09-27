@@ -26,6 +26,133 @@ function createForm(form_num, staff_group, staff_type, form_heading){
   var res = url[1].split("=").first();
 }
 
+
+
+
+function CreateLabel(ID,Classes,for_ID,Text){
+  //Has no Control-group div surrounding it
+  //will be added later so that the div surrounds the label AND the type box
+
+      var newfield = '<label id="'+ID+'" class="control-label '+ Classes +'" for="'+for_ID+'">'+Text+'</label>';
+      return newfield;
+}
+
+function CreateTextField(Label_ID,Label_Class,Label_Text,TextF_ID,Required)
+{
+  var required_class;
+  var finalResult;
+  var label;
+  if(Required)
+  {
+     required_class = " required";
+  }
+  else
+  {
+     required_class = "";
+  }
+  if(typeof Label_Text !== "undefiend")
+  {
+    label = CreateLabel(Label_ID,Label_Class + required_class,TextF_ID,Label_Text);
+  }
+  else
+  {
+    label = "";
+  }
+  finalResult = "<div class='control-group'>"+label+"<div class='controls'><input class='text span12"+required_class+"' id='"+TextF_ID+"' name='"+TextF_ID+"' size='30' type='text'></div></div>";
+}
+
+function CreateTextArea(Label_ID,Label_Class,Label_Text,TextA_ID,Placeholder_Text,Required)
+{
+  var required_class;
+  var finalResult;
+  var label;
+  if(Required)
+  {
+     required_class = " required";
+  }
+  else
+  {
+     required_class = "";
+  }
+  if(typeof Label_Text !== "undefiend")
+  {
+    label = CreateLabel(Label_ID,Label_Class + required_class,TextA_ID,Label_Text);
+  }
+  else
+  {
+    label = "";
+  }
+  return "<div class='control-group'>"+label+"<div class='controls'><textarea class='paragraph section_field span12"+required_class+"' placeholder='"+Placeholder_Text+"' cols='40' aria-invalid='true' id='"+TextA_ID+"' name='"+TextA_ID+"' rows='6'></textarea></div></div>";
+}
+
+function CreateDropdown(Label_ID,Label_Class,Label_Text, Dropdown_ID,DropdownItemArray,Required)
+{
+  var required_class;
+  var label;
+  var Dropdown_start;
+  var Dropdown_mid;
+  var Dropdown_end;
+  if(Required)
+  {
+     required_class = " required";
+  }
+  else
+  {
+     required_class = "";
+  }
+
+  if(Label_Text !== "undefiend")
+  {
+    label = CreateLabel(Label_ID,Label_Class + required_class,Dropdown_ID,Label_Text);
+  }
+  else
+  {
+    label = "";
+  }
+  //Beginning bit of dropdown HTML code
+  Dropdown_start = "<div class='controls'><select class='dropdown_blank dynamic_sections"+required_class+"' id='"+Dropdown_ID+"' name='"+Dropdown_ID+"'>";
+
+ //Creates the options for the Dropdown
+    for(count = 0; count < DropdownItemArray.length; count++)
+    {
+      var option = "<option value="+DropdownItemArray[count]+">"+DropdownItemArray[count]+"</option>";
+      Dropdown_mid += option;
+    }
+
+    //Ending bit of dropdown HTML code
+    Dropdown_end = "</select></div>";
+
+    return "<div class='control-group'>" + label + Dropdown_start + Dropdown_mid + Dropdown_end+"</div>"
+}
+
+function CreateCheckBoxes(Label_ID,Label_Class,Label_Text,Checkbox_ID,Required)
+{
+  var required_class;
+  var checkbox_HTML;
+  var label;
+  if(Required)
+  {
+     required_class = " required";
+  }
+  else
+  {
+     required_class = "";
+  }
+  if(typeof Label_Text !== "undefiend")
+  {
+    label =  "<div class='control-group ticket_section'><div class='controls'><label id='"+Label_ID+"' class='control-label"+Label_Class+required_class+"' for='"Checkbox_ID"'>";
+  }
+  else
+  {
+    label = "";
+  }
+  checkbox_HTML = "<input class='checkbox section_field"+required_class+"' id='' name='' type='checkbox' value='No'>";
+
+  return label+checkbox_HTML+Label_Text+"</label></div></div>";
+}
+
+
+
 //passing an array as an argument
 function createField(array_field){
 
