@@ -1,0 +1,240 @@
+document.getElementById("myButton").addEventListener("click", createForm, false); //to test
+
+var array_form = ['form_num','staff_group', 'staff_type', 'heading'];
+
+var array_field = ['checkbox','myname','myid','class1 class2','id_insert',true,true,'text for the tooltip',true];
+
+var array_title = ['title_name','id_insert','title_class title class2'];
+
+var array_placeholder = ['Text for the placeholder','id_insert'];
+
+var array_formtypes = ['Application', 'App2', 'Need more documents'];
+
+
+function createForm(form_num, staff_group, staff_type, form_heading){
+//create subject for the form
+
+  jQuery('#helpdesk_ticket_subject').val(staff_group + " - " + staff_type);
+  jQuery('#helpdesk_ticket_subject').hide();
+  jQuery('#helpdesk_ticket_subject').closest('.control-group').find('label').hide();
+
+  jQuery(".heading").text(form_heading);
+  
+  browserIssue();
+
+  var url = String(window.location.href).split("_");
+  var res = url[1].split("=").first();
+}
+
+//passing an array as an argument
+function createField(array_field){
+
+  switch(array_field[0]) {
+    case "label":
+        var newfield = '<div class="control-group"> <label id="'+array_field[2]+'" style="color:#1272de;" class="control-label '+array_field[3]+'" for="'+array_field[2]+'">'+array_field[1]+'</label></div>';
+        break;
+
+    case "textfield":
+         newfield = '<div class="control-group"><label class="control-label '+array_field[3]+'" for="'+array_field[2]+'">'+array_field[1]+'</label><div class="controls"><input class="text span12" id="'+array_field[2]+'" name="'+array_field[2]+'" size="30" type="text"></div></div>';
+        break;
+
+    case "textarea":
+         newfield ='<div class="control-group"><label class="control-label '+array_field[3]+'" for="'+array_field[2]+'">'+array_field[1]+'</label><div class="controls"><textarea class="paragraph section_field span12" cols="40" aria-invalid="true" id="'+array_field[2]+'" name="'+array_field[2]+'" rows="6"></textarea></div></div>';
+        break;
+
+    case "checkbox":
+    	  newfield ='<div class="control-group ticket_section"><div class="controls"><label class="checkbox"><input class="checkbox section_field" id="'+array_field[2]+'" name="'+array_field[2]+'" type="checkbox" value="No">'+array_field[1]+'</label></div></div>';
+        break;
+
+    case "dropdown":
+         //not done yet
+        break;
+  }
+  //insert in the form
+      jQuery(newfield).insertAfter(jQuery('"#'+array_field[4]+'"').closest('.control-group'));
+  
+  //mandatory field
+  if(array_field[5]){
+  		mandatoryField(array_field[2]);
+  }
+  //has tooltip
+  if(array_field[6]){
+      addTooltip(array_field[2], array_field[7]);
+  }
+
+}
+
+function hiddenStart(){
+  jQuery('.hidden_start').css('display','none');
+  jQuery('.hidden_start').find('input, textarea, button, select').prop("disabled", true).val('');
+}
+
+function addTitles(title_name,id_insert,title_class){
+  jQuery('<div class="'+title_class+'">'+title_name+'</div>').insertBefore(jQuery('"#'+id_insert+'"').closest('.control-group'));
+}
+
+function addPlaceholders(placeholder, id_insert){
+  jQuery('"#'+id_insert+'"').attr('placeholder', '"'+placeholder+'"');
+}
+
+function applicationType(staff_type){
+  jQuery("#helpdesk_ticket_ticket_type").val(staff_type).change();
+  jQuery("#helpdesk_ticket_ticket_type").children().not(':selected').remove();
+}
+
+//passing an array as an argument
+function filterType(array_formtypes){
+  var filteredtype = "";
+  for(var i=0; i<array_formtypes.length-1;i++){
+    filteredtype += "[value='" + array_formtypes[i] + "'],";
+  }
+  filteredtype = filteredtype + "[value='" + array_formtypes[array_formtypes.length-1] + "']";
+  jQuery("#helpdesk_ticket_ticket_type> option:not(:first-child" + filteredtype + ")").remove();
+}
+
+function oneStaffGroup(staff_group){
+  jQuery("#helpdesk_ticket_custom_field_level_606619").val('"'+staff_group+'"').change();
+  jQuery("#helpdesk_ticket_custom_field_level_606619").children().not(':selected').remove();
+}
+
+function OneStaffGroupHide(staff_group){
+  oneStaffgroup(staff_group);
+  jQuery("#helpdesk_ticket_custom_field_level_606619").closest('.control-group').css('display','none');
+}
+
+function browserIssue(){
+  jQuery('<div class="browser_issue">Do not use Internet Explorer to complete this form. Please use any other browser</div>').insertAfter(jQuery('.heading'));
+}
+
+function hideDescription(){
+  jQuery(".description-label").remove();
+	jQuery(".redactor_box").css('display','none');
+}
+
+function updateSubject(){
+    jQuery('#helpdesk_ticket_custom_field_level_606619, #helpdesk_ticket_ticket_type').on('change',function(){
+      staff_group = jQuery(this).val();
+      subject = staff_group + " - " + staff_type;
+      jQuery('#helpdesk_ticket_subject').val(subject);
+     });
+}
+
+function changeLabel(id_field, new_label){
+  jQuery("'#"+id_field+"'").closest('.control-group').find('label').text(new_label);
+  
+}
+
+function disableForm(message){
+  jQuery('<div id="MSG" style="color:red">'+ message +'</div>').insertAfter(jQuery('.browser_issue'));
+  jQuery('#helpdesk_ticket_submit').prop("disabled", true);
+}
+
+function mandatoryField(mandatory_field){
+  	jQuery('"#'+mandatory_field+'"').closest('.control-group').find('label').addClass('required');
+    jQuery('"#'+mandatory_field+'"').addClass('required');
+}
+
+function addTooltip(field, message){
+  	jQuery('"#'+field+'"').closest('.control-group').find('label').append('<i class="material-icons">&#xE88F;</i>');
+    jQuery('"#'+field+'"').closest('.control-group').find('label').append( "<span class='tooltiptext'>"+message+"</span>" );
+    jQuery('"#'+field+'"').closest('.control-group').find('label').addClass( "tooltips");
+}
+
+//is it necessary to find input or is it enough with the class
+//ticking the checkboxes
+jQuery('.checkbox').closest('.control-group').find('input').on('click',function(){
+  if(jQuery(this).prop('checked') === true){
+    jQuery(this).val("Yes");
+  }else{
+    jQuery(this).val("No");
+  }
+});
+
+//dont think the function on change will work here
+function otherSchoolsPD(other_field, specific_field){
+  jQuery('"#'+other_field+'"').closest('.control-group').css('display','none');
+           	
+  jQuery('"#'+specific_field+'"').on('change',function(){
+    var school_selected = jQuery(this).val();
+    
+    if (school_selected == "Other"){
+        jQuery('"#'+other_field+'"').closest('.control-group').show();
+    }else{
+        jQuery('"#'+other_field+'"').closest('.control-group').css('display','none');
+    }
+    });
+}
+
+//more than one specialty
+jQuery("#helpdesk_ticket_custom_field_specialty_two_606619, #helpdesk_ticket_custom_field_specialty_three_606619, #helpdesk_ticket_custom_field_specialty_four_606619, #helpdesk_ticket_custom_field_specialty_five_606619, #helpdesk_ticket_custom_field_specialty_six_606619").closest('.control-group').find('label').addClass('more_specialty hidden_start');
+
+jQuery('#helpdesk_ticket_custom_field_level_606619').on('change',function(){
+  
+  var medial_spec = jQuery(this).val();
+  if (medial_spec == "Medical Specialty Applicants"){
+    //createField("dropdown","Are you applying for more than one specialty?","more_than_one_specialty","","helpdesk_ticket_custom_field_specialty_606619",true,false,"", true);
+    var dropdown_specialty='<div class="control-group"><label class="control-label portal_customise_drop-label" for="more_than_one_specialty">Are you applying for more than one specialty?</label><div class="controls"><select class="dropdown_blank dynamic_sections" id="more_than_one_specialty"><option value="">...</option><option value="Yes" data-id="142132116">Yes</option><option value="No" data-id="2355556">No</option></select></div> </div>';
+   jQuery(dropdown_specialty).insertAfter(jQuery('#helpdesk_ticket_custom_field_specialty_606619').closest('.control-group'));
+        
+    jQuery('#more_than_one_specialty').on('change',function(){ //more than one specialty
+      var more_than_one = jQuery(this).val();
+      if (more_than_one == "Yes"){
+                        
+        jQuery('.more_specialty').closest('.control-group').insertAfter(jQuery('#more_than_one_specialty').closest('.control-group'));
+        jQuery(".more_specialty").closest('.control-group').show();
+ 
+      }else{
+        jQuery(".more_specialty").closest('.control-group').css('display','none');
+      }
+    
+    });
+  }else{
+    jQuery("#more_than_one_specialty").closest('.control-group').remove();
+  }
+  
+});
+
+function CopyFieldsDescription(copy, id_field) {
+  //copy into the description field
+  if(copy){
+      var description_copy=jQuery('"#'+id_field+'"').val();
+      if (description_copy === "") {description_copy = "Not applicable"}
+      var description_copy_label = jQuery('"#'+id_field+'"').closest('.control-group').find('label').text();
+
+      var description_final = description_final +'<p><b>'+description_copy_label+'</b>&ensp;'+description_copy+'&emsp;</p>';
+  }
+}
+
+jQuery("#helpdesk_ticket_submit").on( "click", function( event ) {
+  event.preventDefault();
+  if(jQuery('#new_helpdesk_ticket').valid()){
+
+  	jQuery(".material-icons").remove();
+  	jQuery(".tooltiptext").remove();
+    
+  	//include the CopyFieldsDescription function loop
+  			
+    jQuery('.redactor_editor p:last-child,#helpdesk_ticket_ticket_body_attributes_description_html').append(tot_txt);
+    jQuery('#helpdesk_ticket_ticket_body_attributes_description_html').val(jQuery('#helpdesk_ticket_ticket_body_attributes_description_html').val() + tot_txt);
+     
+    jQuery.ajax({
+      
+      dataType: 'json',
+      data: jQuery("#new_helpdesk_ticket").serialize(),
+      type: 'POST',
+      url: '/support/tickets.json',
+      
+      success: function(data) {
+        jQuery("<p class='success' style='text-align:center;font-size:18px;color:red'>Your form has been submitted. You will receive a confirmation email shortly with the details of your application.</p>").insertAfter("#new_helpdesk_ticket  .form-actions");
+        document.getElementById("new_helpdesk_ticket").reset();
+        jQuery("#helpdesk_ticket_ticket_body_attributes_description_html, .redactor_editor").html("");
+      },
+      
+      error: function(data){
+        console.log('error');
+        
+      }
+    });
+  }
+  
+});
