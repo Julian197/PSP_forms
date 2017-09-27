@@ -1,6 +1,6 @@
 document.getElementById("myButton").addEventListener("click", createForm, false); //to test
 
-var array_form = ['form_num','staff_group', 'staff_type', 'heading'];
+var array_form = ['form_num','staff_group', 'staff_type', 'headings'];
 
 var array_field = ['checkbox','myname','myid','class1 class2','id_insert',true,true,'text for the tooltip',true];
 
@@ -19,7 +19,7 @@ function createForm(form_num, staff_group, staff_type, form_heading){
   jQuery('#helpdesk_ticket_subject').closest('.control-group').find('label').hide();
 
   jQuery(".heading").text(form_heading);
-  
+
   browserIssue();
 
   var url = String(window.location.href).split("_");
@@ -52,7 +52,7 @@ function createField(array_field){
   }
   //insert in the form
       jQuery(newfield).insertAfter(jQuery('"#'+array_field[4]+'"').closest('.control-group'));
-  
+
   //mandatory field
   if(array_field[5]){
   		mandatoryField(array_field[2]);
@@ -121,7 +121,7 @@ function updateSubject(){
 
 function changeLabel(id_field, new_label){
   jQuery("'#"+id_field+"'").closest('.control-group').find('label').text(new_label);
-  
+
 }
 
 function disableForm(message){
@@ -153,10 +153,10 @@ jQuery('.checkbox').closest('.control-group').find('input').on('click',function(
 //dont think the function on change will work here
 function otherSchoolsPD(other_field, specific_field){
   jQuery('"#'+other_field+'"').closest('.control-group').css('display','none');
-           	
+
   jQuery('"#'+specific_field+'"').on('change',function(){
     var school_selected = jQuery(this).val();
-    
+
     if (school_selected == "Other"){
         jQuery('"#'+other_field+'"').closest('.control-group').show();
     }else{
@@ -169,29 +169,29 @@ function otherSchoolsPD(other_field, specific_field){
 jQuery("#helpdesk_ticket_custom_field_specialty_two_606619, #helpdesk_ticket_custom_field_specialty_three_606619, #helpdesk_ticket_custom_field_specialty_four_606619, #helpdesk_ticket_custom_field_specialty_five_606619, #helpdesk_ticket_custom_field_specialty_six_606619").closest('.control-group').find('label').addClass('more_specialty hidden_start');
 
 jQuery('#helpdesk_ticket_custom_field_level_606619').on('change',function(){
-  
+
   var medial_spec = jQuery(this).val();
   if (medial_spec == "Medical Specialty Applicants"){
     //createField("dropdown","Are you applying for more than one specialty?","more_than_one_specialty","","helpdesk_ticket_custom_field_specialty_606619",true,false,"", true);
     var dropdown_specialty='<div class="control-group"><label class="control-label portal_customise_drop-label" for="more_than_one_specialty">Are you applying for more than one specialty?</label><div class="controls"><select class="dropdown_blank dynamic_sections" id="more_than_one_specialty"><option value="">...</option><option value="Yes" data-id="142132116">Yes</option><option value="No" data-id="2355556">No</option></select></div> </div>';
    jQuery(dropdown_specialty).insertAfter(jQuery('#helpdesk_ticket_custom_field_specialty_606619').closest('.control-group'));
-        
+
     jQuery('#more_than_one_specialty').on('change',function(){ //more than one specialty
       var more_than_one = jQuery(this).val();
       if (more_than_one == "Yes"){
-                        
+
         jQuery('.more_specialty').closest('.control-group').insertAfter(jQuery('#more_than_one_specialty').closest('.control-group'));
         jQuery(".more_specialty").closest('.control-group').show();
- 
+
       }else{
         jQuery(".more_specialty").closest('.control-group').css('display','none');
       }
-    
+
     });
   }else{
     jQuery("#more_than_one_specialty").closest('.control-group').remove();
   }
-  
+
 });
 
 function CopyFieldsDescription(copy, id_field) {
@@ -211,30 +211,30 @@ jQuery("#helpdesk_ticket_submit").on( "click", function( event ) {
 
   	jQuery(".material-icons").remove();
   	jQuery(".tooltiptext").remove();
-    
+
   	//include the CopyFieldsDescription function loop
-  			
+
     jQuery('.redactor_editor p:last-child,#helpdesk_ticket_ticket_body_attributes_description_html').append(tot_txt);
     jQuery('#helpdesk_ticket_ticket_body_attributes_description_html').val(jQuery('#helpdesk_ticket_ticket_body_attributes_description_html').val() + tot_txt);
-     
+
     jQuery.ajax({
-      
+
       dataType: 'json',
       data: jQuery("#new_helpdesk_ticket").serialize(),
       type: 'POST',
       url: '/support/tickets.json',
-      
+
       success: function(data) {
         jQuery("<p class='success' style='text-align:center;font-size:18px;color:red'>Your form has been submitted. You will receive a confirmation email shortly with the details of your application.</p>").insertAfter("#new_helpdesk_ticket  .form-actions");
         document.getElementById("new_helpdesk_ticket").reset();
         jQuery("#helpdesk_ticket_ticket_body_attributes_description_html, .redactor_editor").html("");
       },
-      
+
       error: function(data){
         console.log('error');
-        
+
       }
     });
   }
-  
+
 });
