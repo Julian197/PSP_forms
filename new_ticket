@@ -33,84 +33,73 @@ function CreateLabel(ID,Classes,for_ID,Text){
   //Has no Control-group div surrounding it
   //will be added later so that the div surrounds the label AND the type box
 
-      var newfield = '<label id="'+ID+'" class="control-label '+ Classes +'" for="'+for_ID+'">'+Text+'</label>';
+      var newfield = '<label id="'+ID+'" class="control-label portal_customise_drop-label'+ Classes +'" for="'+for_ID+'">'+Text+'</label>';
       return newfield;
 }
 
-function CreateTextField(Label_ID,Label_Class,Label_Text,TextF_ID,Required)
+function CreateTextField(Label_ID,Label_Class,Label_Text,TextF_ID,Required,Hidden)
 {
-  var required_class;
-  var finalResult;
-  var label;
+  var classes = "";
+  var label = "";
+
+  if(Hidden)
+  {
+      classes += " hidden_start";
+  }
   if(Required)
   {
-     required_class = " required";
-  }
-  else
-  {
-     required_class = "";
+     classes += " required";
   }
   if(typeof Label_Text !== "undefiend")
   {
-    label = CreateLabel(Label_ID,Label_Class + required_class,TextF_ID,Label_Text);
+    label = CreateLabel(Label_ID,Label_Class + classes,TextF_ID,Label_Text);
   }
-  else
-  {
-    label = "";
-  }
-  finalResult = "<div class='control-group'>"+label+"<div class='controls'><input class='text span12"+required_class+"' id='"+TextF_ID+"' name='"+TextF_ID+"' size='30' type='text'></div></div>";
+  return "<div class='control-group'>"+label+"<div class='controls'><input class='text span12"+classes+"' id='"+TextF_ID+"' name='"+TextF_ID+"' size='30' type='text'></div></div>";
 }
 
-function CreateTextArea(Label_ID,Label_Class,Label_Text,TextA_ID,Placeholder_Text,Required)
+function CreateTextArea(Label_ID,Label_Class,Label_Text,TextA_ID,Placeholder_Text,Required,Hidden)
 {
-  var required_class;
-  var finalResult;
-  var label;
+  var classes = "";
+  var label = "";
+  if(Hidden)
+  {
+    classes += " hidden_start";
+  }
   if(Required)
   {
-     required_class = " required";
-  }
-  else
-  {
-     required_class = "";
+    classes += " required";
   }
   if(typeof Label_Text !== "undefiend")
   {
-    label = CreateLabel(Label_ID,Label_Class + required_class,TextA_ID,Label_Text);
+    label = CreateLabel(Label_ID,Label_Class + classes,TextA_ID,Label_Text);
   }
-  else
-  {
-    label = "";
-  }
-  return "<div class='control-group'>"+label+"<div class='controls'><textarea class='paragraph section_field span12"+required_class+"' placeholder='"+Placeholder_Text+"' cols='40' aria-invalid='true' id='"+TextA_ID+"' name='"+TextA_ID+"' rows='6'></textarea></div></div>";
+  return "<div class='control-group'>"+label+"<div class='controls'><textarea class='paragraph section_field span12"+classes+"' placeholder='"+Placeholder_Text+"' cols='40' aria-invalid='true' id='"+TextA_ID+"' name='"+TextA_ID+"' rows='6'></textarea></div></div>";
 }
 
-function CreateDropdown(Label_ID,Label_Class,Label_Text, Dropdown_ID,DropdownItemArray,Required)
+function CreateDropdown(Label_ID,Label_Class,Label_Text, Dropdown_ID,DropdownItemArray,Required,Hidden)
 {
-  var required_class;
-  var label;
+  var classes = "";
+  var label = "";
   var Dropdown_start;
   var Dropdown_mid;
   var Dropdown_end;
+
+  //Checks if Required
+  if(Hidden)
+  {
+      classes +=" hidden_start";
+  }
   if(Required)
   {
-     required_class = " required";
-  }
-  else
-  {
-     required_class = "";
+      classes += " required";
   }
 
   if(Label_Text !== "undefiend")
   {
-    label = CreateLabel(Label_ID,Label_Class + required_class,Dropdown_ID,Label_Text);
-  }
-  else
-  {
-    label = "";
+    label = CreateLabel(Label_ID,Label_Class + classes,Dropdown_ID,Label_Text);
   }
   //Beginning bit of dropdown HTML code
-  Dropdown_start = "<div class='controls'><select class='dropdown_blank dynamic_sections"+required_class+"' id='"+Dropdown_ID+"' name='"+Dropdown_ID+"'>";
+  Dropdown_start = "<div class='controls'><select class='dropdown_blank dynamic_sections"+classes+"' id='"+Dropdown_ID+"' name='"+Dropdown_ID+"'>";
 
  //Creates the options for the Dropdown
     for(count = 0; count < DropdownItemArray.length; count++)
@@ -125,71 +114,31 @@ function CreateDropdown(Label_ID,Label_Class,Label_Text, Dropdown_ID,DropdownIte
     return "<div class='control-group'>" + label + Dropdown_start + Dropdown_mid + Dropdown_end+"</div>"
 }
 
-function CreateCheckBoxes(Label_ID,Label_Class,Label_Text,Checkbox_ID,Required)
+function CreateCheckBox(Label_ID,Label_Class,Label_Text,Checkbox_ID,Required,Hidden)
 {
-  var required_class;
+  var classes = "";
+  var label = "";
+  var label ="";
   var checkbox_HTML;
-  var label;
+
+  if(Hidden)
+  {
+    classes += " hidden_start";
+  }
   if(Required)
   {
-     required_class = " required";
-  }
-  else
-  {
-     required_class = "";
+    classes += " required";
   }
   if(typeof Label_Text !== "undefiend")
   {
-    label =  "<div class='control-group ticket_section'><div class='controls'><label id='"+Label_ID+"' class='control-label"+Label_Class+required_class+"' for='"Checkbox_ID"'>";
+    label =  "<div class='control-group ticket_section'><div class='controls'><label id='"+Label_ID+"' class='control-label"+Label_Class+classes+"' for='"Checkbox_ID"'>";
   }
-  else
-  {
-    label = "";
-  }
-  checkbox_HTML = "<input class='checkbox section_field"+required_class+"' id='' name='' type='checkbox' value='No'>";
+  checkbox_HTML = "<input class='checkbox section_field"+classes+"' id='"+Checkbox_ID+"' name='"+Checkbox_ID+"' type='checkbox' value='No'>";
 
   return label+checkbox_HTML+Label_Text+"</label></div></div>";
 }
 
 
-
-//passing an array as an argument
-function createField(array_field){
-
-  switch(array_field[0]) {
-    case "label":
-        var newfield = '<div class="control-group"> <label id="'+array_field[2]+'" style="color:#1272de;" class="control-label '+array_field[3]+'" for="'+array_field[2]+'">'+array_field[1]+'</label></div>';
-        break;
-
-    case "textfield":
-         newfield = '<div class="control-group"><label class="control-label '+array_field[3]+'" for="'+array_field[2]+'">'+array_field[1]+'</label><div class="controls"><input class="text span12" id="'+array_field[2]+'" name="'+array_field[2]+'" size="30" type="text"></div></div>';
-        break;
-
-    case "textarea":
-         newfield ='<div class="control-group"><label class="control-label '+array_field[3]+'" for="'+array_field[2]+'">'+array_field[1]+'</label><div class="controls"><textarea class="paragraph section_field span12" cols="40" aria-invalid="true" id="'+array_field[2]+'" name="'+array_field[2]+'" rows="6"></textarea></div></div>';
-        break;
-
-    case "checkbox":
-    	  newfield ='<div class="control-group ticket_section"><div class="controls"><label class="checkbox"><input class="checkbox section_field" id="'+array_field[2]+'" name="'+array_field[2]+'" type="checkbox" value="No">'+array_field[1]+'</label></div></div>';
-        break;
-
-    case "dropdown":
-         //not done yet
-        break;
-  }
-  //insert in the form
-      jQuery(newfield).insertAfter(jQuery('"#'+array_field[4]+'"').closest('.control-group'));
-
-  //mandatory field
-  if(array_field[5]){
-  		mandatoryField(array_field[2]);
-  }
-  //has tooltip
-  if(array_field[6]){
-      addTooltip(array_field[2], array_field[7]);
-  }
-
-}
 
 function hiddenStart(){
   jQuery('.hidden_start').css('display','none');
@@ -249,6 +198,10 @@ function updateSubject(){
 function changeLabel(id_field, new_label){
   jQuery("'#"+id_field+"'").closest('.control-group').find('label').text(new_label);
 
+}
+
+function disableField(ID){
+  jQuery('#'ID).closest('.closest-group').prop("disabled", true);
 }
 
 function disableForm(message){
